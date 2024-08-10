@@ -26,6 +26,7 @@ import {
 } from "../../redux_utils/features/saved_tokens";
 import { jwtDecode } from "jwt-decode";
 import * as Location from "expo-location";
+import { add_user } from "../../redux_utils/features/seen_users";
 
 export const Login = ({ navigation }: any) => {
   // states
@@ -87,6 +88,7 @@ export const Login = ({ navigation }: any) => {
       ).unwrap();
       // temporarily save user
       dispatch(setUser(userRes.results));
+      dispatch(add_user(userRes.results));
       // // add this token to saved tokens for multiple accounts - if user agrees
       // saved_accounts?.map((item) => {
       //   const decoded: Decoded = jwtDecode(item);

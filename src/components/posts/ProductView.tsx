@@ -93,9 +93,7 @@ const PairProduct = ({ item, index }: { item: any; index: number }) => {
   const navigation = useNavigation<any>();
   return (
     <Pressable
-      onPress={() =>
-        navigation.navigate("product_details", { passedData: item })
-      }
+      onPress={() => navigation.push("product_details", { passedData: item })}
       style={{
         width: (WINDOW_WIDTH - spacing.padding_horizontal - 15 * 2) * 0.5,
         marginRight: index % 2 == 0 ? 10 : 0,

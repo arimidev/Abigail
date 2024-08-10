@@ -1,9 +1,10 @@
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Tabs } from "react-native-collapsible-tab-view";
 import _styles from "../../utils/_styles";
 import spacing from "../../utils/spacing";
 import { ProductView } from "./ProductView";
+import { ListLoader } from "../loadingDisplay/ListLoader";
 
 export const ProductFlatList = ({
   data,
@@ -31,15 +32,7 @@ export const ProductFlatList = ({
       renderItem={({ item, index }) => (
         <ProductView item={item} index={index} />
       )}
-      ListFooterComponent={
-        loading ? (
-          <View style={[_styles.all_center]}>
-            <ActivityIndicator size={40} color={"#EAEAEA"} />
-          </View>
-        ) : (
-          <View />
-        )
-      }
+      ListFooterComponent={loading ? <ListLoader /> : <View />}
       onEndReached={() => {
         if (isDataAvailable == true && !loading) {
           onEndReached();

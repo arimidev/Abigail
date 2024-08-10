@@ -3,93 +3,33 @@ import React from "react";
 import spacing from "../utils/spacing";
 import _styles from "../utils/_styles";
 import { Image } from "expo-image";
-import { useDispatch, useSelector } from "react-redux";
-import { select_user, setUser } from "../redux_utils/features/user";
+import { useSelector } from "react-redux";
+import { select_user } from "../redux_utils/features/user";
 import colors from "../utils/colors";
 import IonIcons from "@expo/vector-icons/Ionicons";
-import { getImage, getName, showToast } from "../functions";
+import { getImage, getName } from "../functions";
 import { useNavigation } from "@react-navigation/native";
-import { StoryRing } from "./StoryRing";
-import { update_user } from "../redux_utils/features/seen_users";
-import { useFollow_userMutation } from "../redux_utils/api_slice";
+import { useFollowUser } from "../hooks/useFollowUser";
+import { select_seen_users } from "../redux_utils/features/seen_users";
 
 interface Props {
   user: UserProps;
-  on_follow: any;
 }
 
-export const ProfileHeader = ({ user, on_follow }: Props) => {
+export const ProfileHeader = ({ user }: Props) => {
+  // redux
   const User: UserProps = useSelector(select_user);
-  const navigation = useNavigation<any>();
-  const dispatch = useDispatch();
+  const seenUsers: Array<UserProps> = useSelector(select_seen_users);
+  const appUserToUse = seenUsers.find((item) => item._id == User._id);
 
-  // api hooks
-  const [follow_user] = useFollow_userMutation();
+  // hooks
+  const navigation = useNavigation<any>();
+  const { FollowUser } = useFollowUser();
 
   // functions
 
-  // follow page user ===================================================================== follow user on page localy
-
-  function followPageUserLocally() {
-    if (user.is_followed_by_user == true) {
-      dispatch(
-        setUser({
-          ...User,
-          following: User.following - 1,
-        })
-      );
-      dispatch(
-        update_user({
-          ...user,
-          is_followed_by_user: false,
-          followers: user.followers - 1,
-        })
-      );
-    } else {
-      dispatch(
-        setUser({
-          ...User,
-          following: User.followers + 1,
-        })
-      );
-      dispatch(
-        update_user({
-          ...user,
-          is_followed_by_user: true,
-          followers: user.followers + 1,
-        })
-      );
-    }
-  }
-
-  async function followOnBackend() {
-    try {
-      const res = await follow_user(user?._id).unwrap();
-      if (res.action === "follow") {
-        showToast({
-          description: `You followed @${user?.username}`,
-          type: "default",
-          duration: 3000,
-        });
-      }
-    } catch (err) {
-      console.log(err);
-      showToast({
-        description: "Coundn't follow user!",
-        type: "error",
-        duration: 3000,
-      });
-
-      // unfollow locally ==========================
-      followPageUserLocally();
-    }
-  }
-
-  // follow page user on backend ======================================================  follow page user on back end
-
   async function followUserFunc() {
-    followPageUserLocally();
-    followOnBackend();
+    FollowUser({ user, appUser: appUserToUse ?? User });
   }
 
   const UserRightElements = () => {
@@ -108,7 +48,7 @@ export const ProfileHeader = ({ user, on_follow }: Props) => {
     );
   };
 
-  const Following = ({ on_follow }: { on_follow: any }) => {
+  const Following = () => {
     return (
       <Pressable
         onPress={followUserFunc}
@@ -123,7 +63,7 @@ export const ProfileHeader = ({ user, on_follow }: Props) => {
     );
   };
 
-  const NotFollowing = ({ on_follow }: { on_follow: any }) => {
+  const NotFollowing = () => {
     return (
       <Pressable
         style={[_styles.all_center, styles.profile_header_icon_cont]}
@@ -134,23 +74,13 @@ export const ProfileHeader = ({ user, on_follow }: Props) => {
     );
   };
 
-  const StrangerRightElement = ({
-    user,
-    on_follow,
-  }: {
-    user: UserProps;
-    on_follow: any;
-  }) => {
+  const StrangerRightElement = ({ user }: { user: UserProps }) => {
     return (
       <View style={[_styles.flex_row, { gap: 15 }]}>
         <View style={[_styles.all_center, styles.profile_header_icon_cont]}>
           <IonIcons name="search-outline" size={16} color={colors.color_2} />
         </View>
-        {user.is_followed_by_user ? (
-          <Following on_follow={on_follow} />
-        ) : (
-          <NotFollowing on_follow={on_follow} />
-        )}
+        {user.is_followed_by_user ? <Following /> : <NotFollowing />}
       </View>
     );
   };
@@ -182,7 +112,7 @@ export const ProfileHeader = ({ user, on_follow }: Props) => {
       {user._id == User._id ? (
         <UserRightElements />
       ) : (
-        <StrangerRightElement user={user} on_follow={on_follow} />
+        <StrangerRightElement user={user} />
       )}
     </View>
   );

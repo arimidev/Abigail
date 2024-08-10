@@ -7,6 +7,7 @@ import { getImage, getName } from "../../functions";
 import { CommentActionBtns } from "./CommentActions";
 import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
+import { PressToPage } from "../PressToPage";
 
 interface Props {
   item: CommentProps;
@@ -32,17 +33,19 @@ export const CommentComp = ({ item }: Props) => {
         ]}
       >
         {/* profile pic */}
-        <Image
-          source={getImage({
-            uri: item.owner.image_url,
-            gender: item.owner.gender,
-          })}
-          style={{
-            height: 40,
-            width: 40,
-            borderRadius: 50,
-          }}
-        />
+        <PressToPage user={item.owner}>
+          <Image
+            source={getImage({
+              uri: item.owner.image_url,
+              gender: item.owner.gender,
+            })}
+            style={{
+              height: 40,
+              width: 40,
+              borderRadius: 50,
+            }}
+          />
+        </PressToPage>
 
         <View style={{ flex: 1, gap: 5 }}>
           {/* names */}

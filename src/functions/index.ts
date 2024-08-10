@@ -138,3 +138,18 @@ export function hasObjectChanged(latestObj, recentObj) {
 
   return false;
 }
+
+export function getUniqueObjectsById(arr) {
+  const uniqueObjects = arr.reduce((acc, obj) => {
+    const existingObj = acc[obj._id];
+    if (
+      !existingObj ||
+      new Date(obj.created_at) > new Date(existingObj.created_at)
+    ) {
+      acc[obj._id] = obj;
+    }
+    return acc;
+  }, {});
+
+  return Object.values(uniqueObjects);
+}

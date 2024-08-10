@@ -6,7 +6,7 @@ import {
 } from "../redux_utils/api_slice";
 import { showToast } from "../functions";
 import { useDispatch, useSelector } from "react-redux";
-import { update_post } from "../redux_utils/features/seen_posts";
+import { add_post, update_post } from "../redux_utils/features/seen_posts";
 import { select_user } from "../redux_utils/features/user";
 
 const useSavePostFunction = () => {
@@ -48,7 +48,8 @@ const useSavePostFunction = () => {
         type == "post"
           ? await save_post(post._id).unwrap()
           : await save_product(post._id).unwrap();
-      dispatch(update_post(res.results));
+      dispatch(add_post(res.results));
+      console.log(res.results);
       showToast({
         description:
           res.action == "saved"

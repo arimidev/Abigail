@@ -7,6 +7,7 @@ import { PersonalDetails } from "../screens/profile_section/PersonalDetails";
 import { PostDetails } from "../screens/general-screens/PostDetails";
 import { CommentPage } from "../screens/general-screens/CommentPage";
 import { ProductDetails } from "../screens/general-screens/ProductDetails";
+import { UserProfilePage } from "../screens/user/UserProfilePage";
 
 const MainRoute = () => {
   const Stack = createNativeStackNavigator();
@@ -41,6 +42,9 @@ const MainRoute = () => {
           name="product_details"
           options={{ headerShown: true, title: "Product" }}
         />
+      </Stack.Group>
+      <Stack.Group>
+        <Stack.Screen component={UserProfilePage} name="UserPage" />
       </Stack.Group>
     </Stack.Navigator>
   );

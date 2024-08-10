@@ -16,7 +16,8 @@ import {
 import CommentInput from "../../components/posts/CommentInput";
 import { CommentComp } from "../../components/posts/Comment";
 import { showToast } from "../../functions";
-import { PostView } from "../../components/posts/postView";
+import { PostView } from "../../components/posts/PostView";
+import { useCrossCheckPosts } from "../../hooks/useCrossCheckPosts";
 
 export const PostDetails = ({ route }) => {
   // redux
@@ -29,6 +30,10 @@ export const PostDetails = ({ route }) => {
   const [commentsPage, setPage] = useState(1);
   const [is_data_available, set_is_data_available] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+
+  // hooks
+
+  const { crossCheckedPosts } = useCrossCheckPosts();
   // ===== api hooks  ====
   const {
     data: postData,
@@ -90,18 +95,8 @@ export const PostDetails = ({ route }) => {
     setRefreshing(mutCommentsLoading);
   }, []);
 
-  const validatedComments = (arr: Array<CommentProps>) => {
-    const validated_items = arr.map((comment) => {
-      const reduxItem = seen_posts.find(
-        (seen_comment) => seen_comment._id === comment._id
-      );
-      return reduxItem ? { ...comment, ...reduxItem } : comment;
-    });
-    return validated_items;
-  };
-
   const uniqueComments = Array.from(
-    validatedComments(comments)
+    crossCheckedPosts(comments)
       .reduce((map, obj) => map.set(obj._id, obj), new Map())
       .values()
   );

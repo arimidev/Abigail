@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { update_post } from "../redux_utils/features/seen_posts";
 import { select_user, setUser } from "../redux_utils/features/user";
 import {
+  add_user,
   select_seen_users,
   update_user,
 } from "../redux_utils/features/seen_users";
@@ -41,12 +42,12 @@ const useLikePostFunction = () => {
               likes: post.likes - 1,
             })
           );
-          if (post.owner._id == User._id) {
-            dispatch(setUser({ ...User, likes: User.likes - 1 }));
-          }
+          // if (post.owner._id == User._id) {
+          //   dispatch(setUser({ ...User, likes: User.likes - 1 }));
+          // }
           if (existingUser) {
             dispatch(
-              update_user({ ...post.owner, likes: existingUser.likes - 1 })
+              add_user({ ...post.owner, likes: existingUser.likes - 1 })
             );
           }
         } else {
@@ -57,12 +58,12 @@ const useLikePostFunction = () => {
               likes: post.likes + 1,
             })
           );
-          if (post.owner._id == User._id) {
-            dispatch(setUser({ ...User, likes: User.likes + 1 }));
-          }
+          // if (post.owner._id == User._id) {
+          //   dispatch(setUser({ ...User, likes: User.likes + 1 }));
+          // }
           if (existingUser) {
             dispatch(
-              update_user({ ...post.owner, likes: existingUser.likes + 1 })
+              add_user({ ...post.owner, likes: existingUser.likes + 1 })
             );
           }
         }

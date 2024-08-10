@@ -6,6 +6,7 @@ import { getImage, getName } from "../../functions";
 import colors from "../../utils/colors";
 import IonIcons from "@expo/vector-icons/Ionicons";
 import { Image } from "expo-image";
+import { PressToPage } from "../PressToPage";
 
 export const PostHeader = ({
   item,
@@ -22,16 +23,19 @@ export const PostHeader = ({
       ]}
     >
       <View style={[_styles.flex_row, { gap: 10, flex: 1 }]}>
-        <Image
-          source={getImage({
-            uri: item.owner.image_url,
-            gender: item.owner.gender,
-          })}
-          style={[
-            { height: 50, width: 50, borderRadius: 100 },
-            type == "reposted" && { height: 40, width: 40 },
-          ]}
-        />
+        <PressToPage user={item.owner}>
+          <Image
+            source={getImage({
+              uri: item.owner.image_url,
+              gender: item.owner.gender,
+            })}
+            style={[
+              { height: 50, width: 50, borderRadius: 100 },
+              type == "reposted" && { height: 40, width: 40 },
+            ]}
+          />
+        </PressToPage>
+
         <View>
           <Text
             style={[

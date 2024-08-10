@@ -1,7 +1,8 @@
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Tabs } from "react-native-collapsible-tab-view";
 import _styles from "../../utils/_styles";
+import { ListLoader } from "../loadingDisplay/ListLoader";
 
 export const PostFlatList = ({
   loading,
@@ -24,15 +25,7 @@ export const PostFlatList = ({
       contentContainerStyle={{ marginTop: 20, paddingBottom: 50 }}
       renderItem={renderItem}
       keyExtractor={(item) => item._id}
-      ListFooterComponent={
-        loading ? (
-          <View style={[_styles.all_center]}>
-            <ActivityIndicator size={40} color={"#EAEAEA"} />
-          </View>
-        ) : (
-          <View />
-        )
-      }
+      ListFooterComponent={loading ? <ListLoader /> : <View />}
       onEndReached={() => {
         if (isDataAvailable == true && !loading) {
           onEndReached();

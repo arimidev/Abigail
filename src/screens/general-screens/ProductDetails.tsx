@@ -1,10 +1,4 @@
-import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import colors from "../../utils/colors";
 import { ProductView } from "../../components/posts/ProductView";
@@ -22,6 +16,8 @@ import { showToast } from "../../functions";
 import CommentInput from "../../components/posts/CommentInput";
 import _styles from "../../utils/_styles";
 import { CommentComp } from "../../components/posts/Comment";
+import { useCrossCheckPosts } from "../../hooks/useCrossCheckPosts";
+import { ListLoader } from "../../components/loadingDisplay/ListLoader";
 
 export const ProductDetails = ({ navigation, route }) => {
   const passedData: ProductProps = route.params.passedData;
@@ -34,6 +30,10 @@ export const ProductDetails = ({ navigation, route }) => {
   const [commentsPage, setPage] = useState(1);
   const [is_data_available, set_is_data_available] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+
+  // hooks
+
+  const { crossCheckedPosts } = useCrossCheckPosts();
 
   // api hooks
 
@@ -98,18 +98,8 @@ export const ProductDetails = ({ navigation, route }) => {
     setRefreshing(mutCommentsLoading);
   }, []);
 
-  const validatedComments = (arr: Array<CommentProps>) => {
-    const validated_items = arr.map((comment) => {
-      const reduxItem = seen_posts.find(
-        (seen_comment) => seen_comment._id === comment._id
-      );
-      return reduxItem ? { ...comment, ...reduxItem } : comment;
-    });
-    return validated_items;
-  };
-
   const uniqueComments = Array.from(
-    validatedComments(comments)
+    crossCheckedPosts(comments)
       .reduce((map, obj) => map.set(obj._id, obj), new Map())
       .values()
   );
@@ -135,15 +125,7 @@ export const ProductDetails = ({ navigation, route }) => {
             data={uniqueComments}
             keyExtractor={(item) => item._id.toString()}
             renderItem={(item) => <CommentComp {...item} />}
-            ListFooterComponent={
-              mutCommentsLoading ? (
-                <View style={[_styles.all_center]}>
-                  <ActivityIndicator size={40} color={colors.color_2} />
-                </View>
-              ) : (
-                <View />
-              )
-            }
+            ListFooterComponent={mutCommentsLoading ? <ListLoader /> : <View />}
             onEndReached={() => {
               if (
                 is_data_available == true &&

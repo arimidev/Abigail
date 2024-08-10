@@ -27,6 +27,8 @@ import _styles from "../../utils/_styles";
 import CommentInput from "../../components/posts/CommentInput";
 import { getDate, showToast } from "../../functions";
 import spacing from "../../utils/spacing";
+import { useCrossCheckPosts } from "../../hooks/useCrossCheckPosts";
+import { ListLoader } from "../../components/loadingDisplay/ListLoader";
 
 export const CommentPage = ({ route }) => {
   // redux
@@ -38,6 +40,10 @@ export const CommentPage = ({ route }) => {
   const [commentsPage, setPage] = useState(1);
   const [is_data_available, set_is_data_available] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+
+  // hooks
+
+  const { crossCheckedPosts } = useCrossCheckPosts();
 
   // api hooks
 
@@ -104,18 +110,8 @@ export const CommentPage = ({ route }) => {
     setPage(commentsPage + 1);
   }
 
-  const validatedComments = (arr: Array<CommentProps>) => {
-    const validated_items = arr.map((comment) => {
-      const reduxItem = seen_posts.find(
-        (seen_comment) => seen_comment._id === comment._id
-      );
-      return reduxItem ? { ...comment, ...reduxItem } : comment;
-    });
-    return validated_items;
-  };
-
   const uniqueComments: Array<CommentProps> = Array.from(
-    validatedComments(comments)
+    crossCheckedPosts(comments)
       .reduce((map, obj) => map.set(obj._id, obj), new Map())
       .values()
   );
@@ -163,15 +159,7 @@ export const CommentPage = ({ route }) => {
             data={uniqueComments}
             keyExtractor={(item) => item._id.toString()}
             renderItem={(item) => <CommentComp {...item} />}
-            ListFooterComponent={
-              mutCommentsLoading ? (
-                <View style={[_styles.all_center]}>
-                  <ActivityIndicator size={40} color={colors.color_2} />
-                </View>
-              ) : (
-                <View />
-              )
-            }
+            ListFooterComponent={mutCommentsLoading ? <ListLoader /> : <View />}
             onEndReached={() => {
               if (
                 is_data_available == true &&

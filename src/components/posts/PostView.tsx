@@ -40,7 +40,7 @@ const FeedPostComp = ({ item }: { item: UserPostProps }) => {
   const navigation = useNavigation<any>();
   return (
     <Pressable
-      onPress={() => navigation.navigate("post_details", { passedData: item })}
+      onPress={() => navigation.push("post_details", { passedData: item })}
       style={({ pressed }) => [
         {
           gap: 10,
