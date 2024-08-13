@@ -3,7 +3,11 @@ import React, { useRef } from "react";
 import { MainContainer } from "../../components/MainContainer";
 import colors from "../../utils/colors";
 import { useDispatch, useSelector } from "react-redux";
-import { select_user, setUser } from "../../redux_utils/features/user";
+import {
+  clearUser,
+  select_user,
+  setUser,
+} from "../../redux_utils/features/user";
 import { ProfileHeader } from "../../components/ProfileHeader";
 import _styles from "../../utils/_styles";
 import { PressableLeftIcon } from "../../components/PressableLeftIcon";
@@ -22,6 +26,8 @@ import {
   useLogin_userMutation,
 } from "../../redux_utils/api_slice";
 import images from "../../utils/images";
+import { clearPosts } from "../../redux_utils/features/seen_posts";
+import { clearUsers } from "../../redux_utils/features/seen_users";
 
 export const ProfileMenu = ({ navigation }) => {
   const User: UserProps = useSelector(select_user);
@@ -164,6 +170,9 @@ export const ProfileMenu = ({ navigation }) => {
                 // for now
                 dispatch(deleteToken(null));
                 dispatch(setScreen("auth"));
+                dispatch(clearPosts());
+                dispatch(clearUsers());
+                dispatch(clearUser());
               }}
             />
           </View>

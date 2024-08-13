@@ -9,6 +9,8 @@ import { useFonts } from "expo-font";
 import { useEffect } from "react";
 import { NotifierWrapper } from "react-native-notifier";
 import { DummyComp } from "./src/components/DummyComp";
+import { MenuPressContext } from "./src/contexts/MenuPressContext";
+import { MenuDisplay } from "./src/components/MenuDisplay";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -33,7 +35,12 @@ export default function App() {
         <Provider store={store}>
           <NotifierWrapper>
             <NavigationContainer>
-              <EntryRoute />
+              <MenuPressContext>
+                <>
+                  <EntryRoute />
+                  <MenuDisplay />
+                </>
+              </MenuPressContext>
             </NavigationContainer>
           </NotifierWrapper>
         </Provider>

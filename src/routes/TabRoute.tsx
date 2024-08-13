@@ -8,6 +8,8 @@ import colors from "../utils/colors";
 import IonIcons from "@expo/vector-icons/Ionicons";
 import { Profile } from "../screens/bottom_tabs/Profile";
 import { Search } from "../screens/bottom_tabs/Search";
+import { Notifications } from "../screens/bottom_tabs/Notifications";
+import { NotifIcon } from "./components/NotifIcon";
 
 function MyTabBar({ state, descriptors, navigation }) {
   return (
@@ -40,13 +42,9 @@ function MyTabBar({ state, descriptors, navigation }) {
               />
             );
             break;
-          case "search":
+          case "notifications":
             component = (
-              <IonIcons
-                name={isFocused ? "search" : "search-outline"}
-                size={size}
-                color={color}
-              />
+              <NotifIcon isFocused={isFocused} size={size} color={color} />
             );
             break;
           case "profile":
@@ -106,7 +104,12 @@ const TabRoute = () => {
     >
       <Tab.Screen component={Home} name="home" />
       <Tab.Screen component={Chats} name="chats" />
-      <Tab.Screen component={Search} name="search" />
+      {/* <Tab.Screen component={Search} name="search" /> */}
+      <Tab.Screen
+        component={Notifications}
+        name="notifications"
+        options={{ headerShown: true, title: "Notifications" }}
+      />
       <Tab.Screen component={Profile} name="profile" />
     </Tab.Navigator>
   );

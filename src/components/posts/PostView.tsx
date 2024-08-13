@@ -9,6 +9,7 @@ import { PostActionBtns } from "./PostActionBtns";
 import { useNavigation } from "@react-navigation/native";
 import { getDate } from "../../functions";
 import colors from "../../utils/colors";
+import { MenuDisplay } from "../MenuDisplay";
 
 const FeedRepostComp = ({ item }: { item: UserPostProps }) => {
   return (
@@ -125,10 +126,12 @@ export const PostView = ({
   display_type: "feed" | "details";
 }) => {
   return (
-    <View>
-      {display_type == "feed" && <FeedPostComp item={item} />}
-      {display_type == "details" && <DetailsPostComp item={item} />}
-    </View>
+    <>
+      <View>
+        {display_type == "feed" && <FeedPostComp item={item} />}
+        {display_type == "details" && <DetailsPostComp item={item} />}
+      </View>
+    </>
   );
 };
 

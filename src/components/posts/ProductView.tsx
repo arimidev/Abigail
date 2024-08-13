@@ -17,6 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 import { PostHeader } from "./PostHeader";
 import { ProductActionBtns } from "./ProductActionBtns";
 import { getDate } from "../../functions";
+import { MenuDisplay } from "../MenuDisplay";
 
 // const FeedProduct = () => {
 //     return()
@@ -133,10 +134,12 @@ export const ProductView = ({
   display_type?: "feed" | "pair" | "details";
 }) => {
   return (
-    <View>
-      {display_type == "pair" && <PairProduct item={item} index={index} />}
-      {display_type == "details" && <DetailsProduct item={item} />}
-    </View>
+    <>
+      <View>
+        {display_type == "pair" && <PairProduct item={item} index={index} />}
+        {display_type == "details" && <DetailsProduct item={item} />}
+      </View>
+    </>
   );
 };
 

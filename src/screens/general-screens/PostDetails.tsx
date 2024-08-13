@@ -18,13 +18,18 @@ import { CommentComp } from "../../components/posts/Comment";
 import { showToast } from "../../functions";
 import { PostView } from "../../components/posts/PostView";
 import { useCrossCheckPosts } from "../../hooks/useCrossCheckPosts";
+import { MenuDisplay } from "../../components/MenuDisplay";
+import { useFocusEffect } from "@react-navigation/native";
+import { useMenuPressContext } from "../../contexts/MenuPressContext";
 
-export const PostDetails = ({ route }) => {
+export const PostDetails = ({ route, navigation }) => {
   // redux
   const seen_posts: Array<UserPostProps> = useSelector(select_seen_posts);
   const dispatch = useDispatch();
   // route stuff
   const passedData: UserPostProps = route.params.passedData;
+  // context
+  const { sheetRef, sheetOpen } = useMenuPressContext();
   // ======= states ====
   const [comments, setComments] = useState<Array<CommentProps>>([]);
   const [commentsPage, setPage] = useState(1);
@@ -93,7 +98,7 @@ export const PostDetails = ({ route }) => {
       setComments([...data, ...comments]);
     });
     setRefreshing(mutCommentsLoading);
-  }, []);
+  }, [postData, mutCommentsLoading]);
 
   const uniqueComments = Array.from(
     crossCheckedPosts(comments)
@@ -107,6 +112,18 @@ export const PostDetails = ({ route }) => {
     getComments(commentsPage).then(setNextCommentPage);
   }, []);
 
+  React.useEffect(
+    () =>
+      navigation.addListener("beforeRemove", (e) => {
+        if (sheetOpen == false || sheetOpen == undefined) {
+          return;
+        }
+
+        e.preventDefault();
+        sheetRef.current?.close();
+      }),
+    [navigation, sheetOpen]
+  );
   return (
     <View style={[_styles.flex_1, { backgroundColor: colors.color_1 }]}>
       <View style={{ flex: 1 }}>

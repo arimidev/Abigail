@@ -29,8 +29,11 @@ import { getDate, showToast } from "../../functions";
 import spacing from "../../utils/spacing";
 import { useCrossCheckPosts } from "../../hooks/useCrossCheckPosts";
 import { ListLoader } from "../../components/loadingDisplay/ListLoader";
+import { MenuDisplay } from "../../components/MenuDisplay";
+import { useFocusEffect } from "@react-navigation/native";
+import { useMenuPressContext } from "../../contexts/MenuPressContext";
 
-export const CommentPage = ({ route }) => {
+export const CommentPage = ({ route, navigation }) => {
   // redux
   const seen_posts: Array<UserPostProps> = useSelector(select_seen_posts);
   const passedData: CommentProps = route.params.passedData;
@@ -40,6 +43,7 @@ export const CommentPage = ({ route }) => {
   const [commentsPage, setPage] = useState(1);
   const [is_data_available, set_is_data_available] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const { sheetRef, sheetOpen } = useMenuPressContext();
 
   // hooks
 
@@ -123,6 +127,21 @@ export const CommentPage = ({ route }) => {
   useEffect(() => {
     getChildCommentsFunc(commentsPage).then(setNextCommentPage);
   }, []);
+
+  React.useEffect(
+    () =>
+      navigation.addListener("beforeRemove", (e) => {
+        if (!sheetOpen) {
+          // If we don't have unsaved changes, then we don't need to do anything
+          return;
+        }
+
+        // Prevent default behavior of leaving the screen
+        e.preventDefault();
+        sheetRef.current?.close();
+      }),
+    [navigation, sheetOpen]
+  );
 
   // list header comp
 

@@ -23,7 +23,11 @@ export const PostText = ({
             ? 2
             : 5
         }
-        style={[_styles.font_14_medium, { color: colors.color_2 }]}
+        style={[
+          _styles.font_14_medium,
+          { color: colors.color_2 },
+          type == "reposted" && { fontSize: 13 },
+        ]}
       >
         {item.post_text}
       </Text>

@@ -193,7 +193,7 @@ export const UserPage = ({ pageOwner }: { pageOwner: UserProps }) => {
       <ProfileHeader user={userToUse} />
       <BioSection user={userToUse} />
       <LengthSection user={userToUse} />
-      {pageOwner._id !== User._id && <SuggestedAccounts user={pageOwner} />}
+      {/* {pageOwner._id !== User._id && <SuggestedAccounts user={pageOwner} />} */}
     </View>
   );
 

@@ -22,6 +22,7 @@ export const PostFlatList = ({
   return (
     <Tabs.FlatList
       data={data}
+      refreshing={true}
       contentContainerStyle={{ marginTop: 20, paddingBottom: 50 }}
       renderItem={renderItem}
       keyExtractor={(item) => item._id}

@@ -78,7 +78,11 @@ export const ProfileHeader = ({ user }: Props) => {
     return (
       <View style={[_styles.flex_row, { gap: 15 }]}>
         <View style={[_styles.all_center, styles.profile_header_icon_cont]}>
-          <IonIcons name="search-outline" size={16} color={colors.color_2} />
+          <IonIcons
+            name="chatbubble-outline"
+            size={16}
+            color={colors.color_2}
+          />
         </View>
         {user.is_followed_by_user ? <Following /> : <NotFollowing />}
       </View>

@@ -33,9 +33,12 @@ const seen_posts_slice = createSlice({
         post._id === action.payload._id ? { ...post, ...action.payload } : post
       );
     },
+    clearPosts: (state) => {
+      state.posts = [];
+    },
   },
 });
 
-export const { add_post, update_post } = seen_posts_slice.actions;
+export const { add_post, update_post, clearPosts } = seen_posts_slice.actions;
 export default seen_posts_slice.reducer;
 export const select_seen_posts = (state: any) => state.seen_posts.posts;

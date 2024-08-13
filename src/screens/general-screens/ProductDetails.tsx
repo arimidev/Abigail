@@ -18,12 +18,18 @@ import _styles from "../../utils/_styles";
 import { CommentComp } from "../../components/posts/Comment";
 import { useCrossCheckPosts } from "../../hooks/useCrossCheckPosts";
 import { ListLoader } from "../../components/loadingDisplay/ListLoader";
+import { MenuDisplay } from "../../components/MenuDisplay";
+import { useMenuPressContext } from "../../contexts/MenuPressContext";
 
 export const ProductDetails = ({ navigation, route }) => {
   const passedData: ProductProps = route.params.passedData;
   // redux
   const seen_posts: Array<ProductProps> = useSelector(select_seen_posts);
   const dispatch = useDispatch();
+
+  // context
+
+  const { sheetOpen, sheetRef } = useMenuPressContext();
 
   // states
   const [comments, setComments] = useState<Array<CommentProps>>([]);
@@ -109,6 +115,19 @@ export const ProductDetails = ({ navigation, route }) => {
   useEffect(() => {
     getComments(commentsPage).then(setNextCommentPage);
   }, []);
+
+  React.useEffect(
+    () =>
+      navigation.addListener("beforeRemove", (e) => {
+        if (sheetOpen == false || sheetOpen == undefined) {
+          return;
+        }
+
+        e.preventDefault();
+        sheetRef.current?.close();
+      }),
+    [navigation, sheetOpen]
+  );
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.color_1 }}>
