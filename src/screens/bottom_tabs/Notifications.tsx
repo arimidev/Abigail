@@ -63,9 +63,6 @@ export const Notifications = () => {
 
   const refreshFunc = useCallback(() => {
     setRefreshing(true);
-    // if (queryData) {
-    //   setNotifications([...queryData.results, notifications]);
-    // }
     getNotifFunc(1).then((res) => {
       setNotifications([...res, ...notifications]);
     });
@@ -104,9 +101,9 @@ export const Notifications = () => {
             onRefresh={refreshFunc}
             data={uniqueNotifications}
             contentContainerStyle={{
-              paddingHorizontal: spacing.padding_horizontal,
+              // paddingHorizontal: spacing.padding_horizontal,
               paddingVertical: 20,
-              gap: 15,
+              gap: 10,
             }}
             keyExtractor={(item) => item._id}
             renderItem={({ item, index }) => (

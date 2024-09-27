@@ -8,6 +8,8 @@ import { PostDetails } from "../screens/general-screens/PostDetails";
 import { CommentPage } from "../screens/general-screens/CommentPage";
 import { ProductDetails } from "../screens/general-screens/ProductDetails";
 import { UserProfilePage } from "../screens/user/UserProfilePage";
+import { Search } from "../screens/bottom_tabs/home/search/Search";
+import { MainSearch } from "../screens/bottom_tabs/home/search/MainSearch";
 
 const MainRoute = () => {
   const Stack = createNativeStackNavigator();
@@ -42,6 +44,10 @@ const MainRoute = () => {
           name="product_details"
           options={{ headerShown: true, title: "Product" }}
         />
+      </Stack.Group>
+      <Stack.Group screenOptions={{ animation: "slide_from_right" }}>
+        <Stack.Screen component={Search} name="search" />
+        <Stack.Screen component={MainSearch} name="main-search" />
       </Stack.Group>
       <Stack.Group>
         <Stack.Screen component={UserProfilePage} name="UserPage" />

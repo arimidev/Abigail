@@ -98,20 +98,24 @@ const PairProduct = ({ item, index }: { item: any; index: number }) => {
       style={{
         width: (WINDOW_WIDTH - spacing.padding_horizontal - 15 * 2) * 0.5,
         marginRight: index % 2 == 0 ? 10 : 0,
-        marginTop: index % 2 == 0 ? 10 : 40,
+        // marginTop: index % 2 == 0 ? 10 : 40,
         gap: 10,
       }}
     >
       <Image
         source={item.medias[0]}
         style={{
-          height: WINDOW_WIDTH / 1.9,
+          height: WINDOW_WIDTH / 2,
           width: "100%",
+          borderRadius: 10,
         }}
       />
       <View style={{ gap: 5 }}>
         <Text
-          style={[_styles.font_14_semi_bold, { color: colors.color_2 }]}
+          style={[
+            _styles.font_12_semi_bold,
+            { color: colors.color_2, fontSize: 13 },
+          ]}
           numberOfLines={2}
         >
           {item.title}
