@@ -5,20 +5,12 @@ import BottomSheet, {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import colors from "../utils/colors";
+import { CustomBackdrop } from "./CustomBacdrop";
 
 interface Props {
   children: JSX.Element;
   height: Array<`${number}%`>;
 }
-
-const CustomBackdrop = (props) => (
-  <BottomSheetBackdrop
-    {...props}
-    appearsOnIndex={0}
-    disappearsOnIndex={-1}
-    opacity={0.2}
-  />
-);
 
 export const BottonSheetOptions = forwardRef(
   ({ children, height }: Props, ref) => {

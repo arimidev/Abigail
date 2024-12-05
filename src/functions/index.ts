@@ -121,3 +121,35 @@ export function getSavedAccount(token: string) {
   }
   return null;
 }
+
+export function hasObjectChanged(latestObj, recentObj) {
+  const latestEntries = Object.entries(latestObj);
+  const recentEntries = Object.entries(recentObj);
+
+  if (latestEntries.length !== recentEntries.length) {
+    return true;
+  }
+
+  for (const [key, value] of latestEntries) {
+    if (recentObj[key] !== value) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+export function getUniqueObjectsById(arr) {
+  const uniqueObjects = arr.reduce((acc, obj) => {
+    const existingObj = acc[obj._id];
+    if (
+      !existingObj ||
+      new Date(obj.created_at) > new Date(existingObj.created_at)
+    ) {
+      acc[obj._id] = obj;
+    }
+    return acc;
+  }, {});
+
+  return Object.values(uniqueObjects);
+}

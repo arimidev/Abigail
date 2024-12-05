@@ -38,16 +38,16 @@ export const PostMedias = ({
         >
           <Image
             source={item.medias[0]}
-            style={{ height: "100%", flex: 1, borderRadius: 0 }}
+            style={{ height: "100%", flex: 1, borderRadius: 10 }}
           />
           <View style={{ flex: 1, gap: 5 }}>
             <Image
               source={item.medias[1]}
-              style={{ flex: 1, width: "100%", borderRadius: 0 }}
+              style={{ flex: 1, width: "100%", borderRadius: 10 }}
             />
             <Image
               source={item.medias[2]}
-              style={{ flex: 1, width: "100%", borderRadius: 0 }}
+              style={{ flex: 1, width: "100%", borderRadius: 10 }}
             />
           </View>
         </View>
@@ -62,21 +62,21 @@ export const PostMedias = ({
           <View style={{ flex: 1, gap: 5 }}>
             <Image
               source={item.medias[0]}
-              style={{ flex: 1, width: "100%", borderRadius: 0 }}
+              style={{ flex: 1, width: "100%", borderRadius: 10 }}
             />
             <Image
               source={item.medias[1]}
-              style={{ flex: 1, width: "100%", borderRadius: 0 }}
+              style={{ flex: 1, width: "100%", borderRadius: 10 }}
             />
           </View>
           <View style={{ flex: 1, gap: 5 }}>
             <Image
               source={item.medias[2]}
-              style={{ flex: 1, width: "100%", borderRadius: 0 }}
+              style={{ flex: 1, width: "100%", borderRadius: 10 }}
             />
             <Image
               source={item.medias[3]}
-              style={{ flex: 1, width: "100%", borderRadius: 0 }}
+              style={{ flex: 1, width: "100%", borderRadius: 10 }}
             />
           </View>
         </View>
@@ -89,12 +89,12 @@ const styles = StyleSheet.create({
   post_img_1: {
     // height: spacing.window_width / 2,
     width: "100%",
-    // borderRadius: 10,
+    borderRadius: 10,
     overflow: "hidden",
   },
   post_img_x2: {
     height: spacing.window_width / 2,
     flex: 1,
-    // borderRadius: 10,
+    borderRadius: 10,
   },
 });

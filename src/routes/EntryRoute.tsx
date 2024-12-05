@@ -10,6 +10,7 @@ import { useGet_userMutation } from "../redux_utils/api_slice";
 import { setUser } from "../redux_utils/features/user";
 import { DummyComp } from "../components/DummyComp";
 import { jwtDecode } from "jwt-decode";
+import { add_user } from "../redux_utils/features/seen_users";
 
 const EntryRoute = () => {
   const Stack = createNativeStackNavigator();
@@ -39,6 +40,7 @@ const EntryRoute = () => {
         console.log(userRes);
         // save user profile
         dispatch(setUser(userRes.results));
+        dispatch(add_user(userRes.results));
         // take user to home
         dispatch(setScreen("home"));
       } catch (err) {

@@ -28,7 +28,7 @@ type Decoded = {
 type UserPostProps = {
   _id: string;
   owner: UserProps;
-  type: "post" | "repost" | "comment";
+  type: "post" | "repost";
   medias: Array<string>;
   tags: Array<string>;
   post_text: string;
@@ -57,4 +57,43 @@ type CommentProps = {
   likes: number;
   comments: number;
   saves: number;
+  post: string;
+  type: "comment";
+};
+
+type ProductProps = {
+  _id: string;
+  description: string;
+  medias: Array<string>;
+  owner: UserProps;
+  likes: number;
+  comments: number;
+  saves: number;
+  title: string;
+  website: string;
+  price: number;
+  type: "product";
+  category: string;
+  sub_category: string;
+  created_at: string;
+  is_liked_by_user: boolean;
+  is_saved_by_user: boolean;
+};
+
+type NotificationProps = {
+  _id: string;
+  owner: UserProps;
+  title: string;
+  body: string;
+  createdAt: string;
+  seen: boolean;
+  payload: ProductProps | UserProps | CommentProps | UserPostProps;
+  activity:
+    | "commentOnPost"
+    | "likePost"
+    | "replyToComment"
+    | "newFollower"
+    | "replyToACommentOnPost"
+    | "postReposted";
+  user: UserProps;
 };

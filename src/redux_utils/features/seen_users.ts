@@ -33,9 +33,12 @@ const seen_users_slice = createSlice({
         user._id === action.payload._id ? { ...user, ...action.payload } : user
       );
     },
+    clearUsers: (state) => {
+      state.users = [];
+    },
   },
 });
 
-export const { add_user, update_user } = seen_users_slice.actions;
+export const { add_user, update_user, clearUsers } = seen_users_slice.actions;
 export default seen_users_slice.reducer;
 export const select_seen_users = (state: any) => state.seen_users.users;

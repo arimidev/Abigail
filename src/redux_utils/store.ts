@@ -8,6 +8,7 @@ import user from "./features/user";
 import seen_posts from "./features/seen_posts";
 import seen_users from "./features/seen_users";
 import saved_tokens from "./features/saved_tokens";
+import savedSearches from "./features/savedSearches";
 import * as SecureStore from "expo-secure-store";
 import {
   persistStore,
@@ -46,7 +47,7 @@ const storage = {
 const persistConfig = {
   key: ensureValidKey("root"),
   storage,
-  whitelist: ["token_slice"],
+  whitelist: ["token_slice", "savedSearches"],
 };
 
 const reducers = combineReducers({
@@ -57,6 +58,7 @@ const reducers = combineReducers({
   saved_tokens,
   seen_posts,
   seen_users,
+  savedSearches,
   [app_api.reducerPath]: app_api.reducer,
 });
 

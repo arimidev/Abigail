@@ -12,7 +12,6 @@ import { PostText } from "../../components/posts/PostText";
 import { PostMedias } from "../../components/posts/PostMedias";
 import { CommentActionBtns } from "../../components/posts/CommentActions";
 import {
-  useGetChildComments_qQuery,
   useGetChildCommentsMutation,
   useGetCommentDetailsQuery,
 } from "../../redux_utils/api_slice";
@@ -28,18 +27,27 @@ import _styles from "../../utils/_styles";
 import CommentInput from "../../components/posts/CommentInput";
 import { getDate, showToast } from "../../functions";
 import spacing from "../../utils/spacing";
+import { useCrossCheckPosts } from "../../hooks/useCrossCheckPosts";
+import { ListLoader } from "../../components/loadingDisplay/ListLoader";
+import { MenuDisplay } from "../../components/MenuDisplay";
+import { useFocusEffect } from "@react-navigation/native";
+import { useMenuPressContext } from "../../contexts/MenuPressContext";
 
-export const CommentPage = ({ navigation, route }) => {
+export const CommentPage = ({ route, navigation }) => {
   // redux
   const seen_posts: Array<UserPostProps> = useSelector(select_seen_posts);
   const passedData: CommentProps = route.params.passedData;
   const dispatch = useDispatch();
   // state
   const [comments, setComments] = useState<Array<CommentProps>>([]);
-  const [page, setPage] = useState(1);
+  const [commentsPage, setPage] = useState(1);
   const [is_data_available, set_is_data_available] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  //   const [commentData, setCommentData] = useState<CommentProps>(passedData);
+  const { sheetRef, sheetOpen } = useMenuPressContext();
+
+  // hooks
+
+  const { crossCheckedPosts } = useCrossCheckPosts();
 
   // api hooks
 
@@ -61,16 +69,6 @@ export const CommentPage = ({ navigation, route }) => {
     getChildComments,
     { isLoading: mutCommentsLoading, isError: mutCommentsErr },
   ] = useGetChildCommentsMutation();
-  // const {
-  //   data: queryComments,
-  //   isLoading: queryCommentsLoading,
-  //   isError: queryCommentsErr,
-  //   refetch: queryCommentsRefetch,
-  // } = useGetChildComments_qQuery({
-  //   id: passedData?._id,
-  //   page: 1,
-  //   limit: 5,
-  // });
 
   // functions
 
@@ -80,11 +78,14 @@ export const CommentPage = ({ navigation, route }) => {
         id: passedData._id,
         page: page,
         limit: 5,
+        postId: passedData.post,
+        parentId: passedData._id,
       }).unwrap();
       res.results.map((item) => {
         dispatch(add_post(item));
       });
       set_is_data_available(res.results?.length > 0);
+
       return res.results;
     } catch (error) {
       console.log(error);
@@ -99,6 +100,9 @@ export const CommentPage = ({ navigation, route }) => {
   const refreshFunc = useCallback(() => {
     setRefreshing(true);
     pageCommentRefetch();
+    if (pageComment) {
+      dispatch(add_post(pageComment.results));
+    }
     getChildCommentsFunc(1).then((data) => {
       setComments([...data, ...comments]);
     });
@@ -107,39 +111,37 @@ export const CommentPage = ({ navigation, route }) => {
 
   function setNextCommentPage(data) {
     setComments([...comments, ...data]);
-    setPage(page + 1);
+    setPage(commentsPage + 1);
   }
 
   const uniqueComments: Array<CommentProps> = Array.from(
-    comments.reduce((map, obj) => map.set(obj._id, obj), new Map()).values()
+    crossCheckedPosts(comments)
+      .reduce((map, obj) => map.set(obj._id, obj), new Map())
+      .values()
   );
 
   // effects
 
-  // update main comment
-
-  useEffect(() => {
-    if (pageComment) {
-      dispatch(add_post(pageComment.results));
-    }
-  }, [pageComment]);
-
   // get child comments on mount
 
   useEffect(() => {
-    getChildCommentsFunc(page).then(setNextCommentPage);
+    getChildCommentsFunc(commentsPage).then(setNextCommentPage);
   }, []);
 
-  // update child comments
+  React.useEffect(
+    () =>
+      navigation.addListener("beforeRemove", (e) => {
+        if (!sheetOpen) {
+          // If we don't have unsaved changes, then we don't need to do anything
+          return;
+        }
 
-  // useEffect(() => {
-  // if (queryComments?.results) {
-  //   setComments([...queryComments?.results, ...comments]);
-  //   queryComments?.results.map((item) => {
-  //     dispatch(add_post(item));
-  //   });
-  // }
-  // }, [queryComments]);
+        // Prevent default behavior of leaving the screen
+        e.preventDefault();
+        sheetRef.current?.close();
+      }),
+    [navigation, sheetOpen]
+  );
 
   // list header comp
 
@@ -176,18 +178,14 @@ export const CommentPage = ({ navigation, route }) => {
             data={uniqueComments}
             keyExtractor={(item) => item._id.toString()}
             renderItem={(item) => <CommentComp {...item} />}
-            ListFooterComponent={
-              mutCommentsLoading ? (
-                <View style={[_styles.all_center]}>
-                  <ActivityIndicator size={40} color={colors.color_2} />
-                </View>
-              ) : (
-                <View />
-              )
-            }
+            ListFooterComponent={mutCommentsLoading ? <ListLoader /> : <View />}
             onEndReached={() => {
-              if (is_data_available == true && !mutCommentsLoading) {
-                getChildCommentsFunc(page).then(setNextCommentPage);
+              if (
+                is_data_available == true &&
+                !mutCommentsLoading &&
+                !mutCommentsErr
+              ) {
+                getChildCommentsFunc(commentsPage).then(setNextCommentPage);
               }
             }}
           />

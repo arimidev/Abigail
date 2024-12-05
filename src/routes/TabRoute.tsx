@@ -1,6 +1,12 @@
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Pressable,
+} from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Home } from "../screens/bottom_tabs/Home";
+import { Home } from "../screens/bottom_tabs/home/Home";
 import { Chats } from "../screens/bottom_tabs/Chats";
 import _styles from "../utils/_styles";
 import spacing from "../utils/spacing";
@@ -8,6 +14,8 @@ import colors from "../utils/colors";
 import IonIcons from "@expo/vector-icons/Ionicons";
 import { Profile } from "../screens/bottom_tabs/Profile";
 import { Search } from "../screens/bottom_tabs/Search";
+import { Notifications } from "../screens/bottom_tabs/Notifications";
+import { NotifIcon } from "./components/NotifIcon";
 
 function MyTabBar({ state, descriptors, navigation }) {
   return (
@@ -40,13 +48,9 @@ function MyTabBar({ state, descriptors, navigation }) {
               />
             );
             break;
-          case "search":
+          case "notifications":
             component = (
-              <IonIcons
-                name={isFocused ? "search" : "search-outline"}
-                size={size}
-                color={color}
-              />
+              <NotifIcon isFocused={isFocused} size={size} color={color} />
             );
             break;
           case "profile":
@@ -97,16 +101,56 @@ function MyTabBar({ state, descriptors, navigation }) {
   );
 }
 
+const SearchIcon = ({ onPress }: { onPress?: () => void }) => (
+  <View
+    style={[_styles.flex_row, { gap: 15, right: spacing.padding_horizontal }]}
+  >
+    <Pressable onPress={onPress}>
+      <IonIcons name="search-outline" size={20} color={"#717171"} />
+    </Pressable>
+  </View>
+);
+
 const Tab = createBottomTabNavigator();
-const TabRoute = () => {
+const TabRoute = ({ navigation }) => {
   return (
     <Tab.Navigator
       tabBar={(props) => <MyTabBar {...props} />}
-      screenOptions={{ headerShown: false }}
+      screenOptions={{
+        headerShown: false,
+        headerStyle: { backgroundColor: colors.color_1 },
+        headerTitleStyle: { ..._styles.font_18_bold },
+      }}
     >
-      <Tab.Screen component={Home} name="home" />
-      <Tab.Screen component={Chats} name="chats" />
-      <Tab.Screen component={Search} name="search" />
+      <Tab.Screen
+        component={Home}
+        name="home"
+        options={{
+          headerShown: true,
+          title: "Abigail",
+          headerRight: () => (
+            <SearchIcon onPress={() => navigation.navigate("search")} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        component={Chats}
+        name="chats"
+        options={{
+          headerShown: true,
+          title: "Chats",
+          headerRight: () => <SearchIcon />,
+        }}
+      />
+
+      <Tab.Screen
+        component={Notifications}
+        name="notifications"
+        options={{
+          headerShown: true,
+          title: "Notifications",
+        }}
+      />
       <Tab.Screen component={Profile} name="profile" />
     </Tab.Navigator>
   );

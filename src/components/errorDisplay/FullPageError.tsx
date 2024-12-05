@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 
-export const Search = () => {
+export const FullPageError = () => {
   return (
     <View>
-      <Text>Search</Text>
+      <Text>FullPageError</Text>
     </View>
   );
 };
